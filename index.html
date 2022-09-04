@@ -1,1 +1,182 @@
-faithfulchen
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		faithfulchen
+	</title>
+	<style type="text/css">
+		body{
+			font-family: 楷体;
+			margin:0;
+			padding:0;
+
+		}
+
+		input{
+			outline: none;
+		}
+
+		.wrap{
+			position: relative; 
+			width:100vw;
+			height:100vh;
+			overflow: hidden;
+			background-color:black;
+
+		}
+		.wrap_search{
+			position: absolute;
+			background: white;
+			padding:10px 5px;
+			left:20vw;
+			top:20vh;
+
+			width:60vw;
+			border-radius: 4px;
+		}
+
+		.wrap_search .tab{
+			display:flex;
+			flex-direction: row;
+		}
+		.wrap_search .tab .each{
+			margin:0 12px;
+			font-size:18px;
+		}
+
+		.wrap_search .tab .each:hover{
+			cursor: pointer;
+			color:#6699cc;
+		}
+
+
+		.wrap_search .search{
+			display:flex;
+			flex-direction: row;
+			margin:0;
+			padding:0;
+			height:28px;
+		}
+
+		.wrap_search .search .search_text{
+			line-height: 28px;
+			flex:1;
+		}
+		.wrap_search .search .search_text input{
+			width:100%;
+			height:28px;
+			border:1px solid #000;
+			/*background: red;*/
+
+		}
+		.wrap_search .search .search_text input:focus {
+			border:1px solid #6699cc;
+			color:#6699cc;
+		}
+
+
+		.wrap_search .search_btn{
+			line-height: 28px;
+			/*border:1px solid black;*/
+			margin-left:20px;
+
+		}
+		.wrap_search .search_btn:hover{
+			cursor: pointer;
+			color:#6699cc;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div class="wrap">
+
+
+		<div class="wrap_search">
+			<div class="tab" id="tab">
+				<div class="each">bing</div>
+				<div class="each">百度</div>
+				<div class="each">搜狗</div>
+				<div class="each">谷歌</div>
+			</div>
+			<div class="search">
+				<div class="search_text">
+					<input type="" name="" id="search_text">
+				</div>
+
+				<div class="search_btn" id="search_btn">搜索</div>
+			</div>
+		</div>
+
+		
+	</div>
+</body>
+<script type="text/javascript">
+	window.onload=function(){
+
+		//初始化元素选择器
+		var tabEl = document.getElementById("tab");
+		var searchBtnEl = document.getElementById("search_btn");
+		var searchTextEl = document.getElementById("search_text");
+
+		searchTextEl.focus();
+
+
+		function openUrl(url){
+			window.open(url,"_blank")
+		}
+
+		function setActive(who){
+			for(var i=0;i<tabEl.children.length;i++){
+				tabEl.children[i].style.color="#000";
+				if(tabEl.children[i].innerHTML===who){
+					tabEl.children[i].style.color="#6699cc";
+				}
+			}
+		}
+		function doLogic(who){
+			//跳转
+			if(who.indexOf("bing")>=0){
+				return openUrl("https://cn.bing.com/search?q="+searchTextEl.value);
+			}else if(who.indexOf("百度")>=0){
+				return openUrl("https://www.baidu.com/s?wd="+searchTextEl.value);
+			}else if(who.indexOf("搜狗")>=0){
+				return openUrl("https://www.sogou.com/web?query="+searchTextEl.value);
+			}else if(who.indexOf("谷歌")>=0){
+				return openUrl("https://www.google.com/search?q="+searchTextEl.value);
+			}
+		}
+
+		//默认选择的搜索引擎
+		var lastChoose = localStorage.getItem("chooseEngine");
+		if(!lastChoose){
+			localStorage.setItem("chooseEngine","bing");
+			lastChoose="bing";
+		}
+		setActive(lastChoose);
+
+		tabEl.addEventListener('click',function(event){
+			// console.log(event.target.innerHTML);
+			// console.log(searchTextEl.value)
+			//设置本地
+			localStorage.setItem("chooseEngine",event.target.innerHTML);
+			//设置元素高亮
+			setActive(event.target.innerHTML);
+			//自行跳转逻辑
+			doLogic(event.target.innerHTML);
+		})
+
+		searchBtnEl.addEventListener('click',function(){
+			doLogic(localStorage.getItem("chooseEngine"));
+		})
+
+		document.onkeydown = function(e){
+			if(e.keyCode==13){
+				doLogic(localStorage.getItem("chooseEngine"));
+			}
+		}
+	}
+</script>
+</html>
